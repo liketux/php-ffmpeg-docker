@@ -1,0 +1,9 @@
+version: '2'
+services:
+
+  php:
+    build: .
+    volumes:
+      - ./app:/var/www/html:delegated
+    ports:
+      - '80:80'
