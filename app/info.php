@@ -24,13 +24,18 @@
     $video = $ffmpeg->open($file);
     $video->frame(FFMpeg\Coordinate\TimeCode::fromSeconds($sec))->save($img);
 
-    unlink($file);
-
     if (!file_exists($img)) {
         http_response_code(400);
         exit;
     }
+    $info = $video->getFormat()->all();
 
-    header('Content-type: image/jpeg');
-    readfile($img);
+    $result = [
+        'frame' => base64_encode(file_get_contents($img)),
+        'info' => $info,
+    ];
+
+    unlink($file);
     unlink($img);
+
+    print json_encode($result);
